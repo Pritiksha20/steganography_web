@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steganography</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Steganography</h1>
+        <form method="POST" enctype="multipart/form-data">
+            <label for="choice">Choose an option:</label>
+            <select name="choice" id="choice">
+                <option value="1">Encode Message</option>
+                <option value="2">Decode Message</option>
+            </select>
+            <br><br>
+            <label for="image">Upload Image:</label>
+            <input type="file" name="image" id="image" required>
+            <br><br>
+            <div id="message-field">
+                <label for="message">Enter Message:</label>
+                <input type="text" name="message" id="message">
+            </div>
+            <br><br>
+            <button type="submit">Submit</button>
+        </form>
+
+        {% if encoded_image %}
+            <h2>Encoded Image:</h2>
+            <img src="{{ url_for('static', filename='uploads/encoded_image.png') }}" alt="Encoded Image">
+        {% endif %}
+
+        {% if decoded_message %}
+            <h2>Decoded Message:</h2>
+            <p>{{ decoded_message }}</p>
+        {% endif %}
+    </div>
+
+    <script>
+        document.getElementById('choice').addEventListener('change', function() {
+            var messageField = document.getElementById('message-field');
+            if (this.value === '1') {
+                messageField.style.display = 'block'; // Show the message input field
+            } else {
+                messageField.style.display = 'none'; // Hide the message input field
+            }
+        });
+    
+        // Trigger the change event on page load to set the initial state
+        document.addEventListener('DOMContentLoaded', function() {
+            var choice = document.getElementById('choice');
+            var messageField = document.getElementById('message-field');
+            if (choice.value === '1') {
+                messageField.style.display = 'block'; // Show the message input field
+            } else {
+                messageField.style.display = 'none'; // Hide the message input field
+            }
+        });
+    </script>
+</body>
+</html>
