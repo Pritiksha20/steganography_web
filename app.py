@@ -1,10 +1,15 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request
 import os
 from PIL import Image
 import numpy as np
+import webbrowser
+from threading import Timer
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
+
+if not os.path.exists(app.config['UPLOAD_FOLDER']):
+    os.makedirs(app.config['UPLOAD_FOLDER'])
 
 def encode_image(image_path, text):
     img = Image.open(image_path)
@@ -68,7 +73,10 @@ def index():
             return render_template('index.html', decoded_message=decoded_message)
     return render_template('index.html')
 
+def open_browser():
+    if not os.environ.get("WERKZEUG_RUN_MAIN"):
+        webbrowser.open_new('http://127.0.0.1:5000/')
+
 if __name__ == '__main__':
-    if not os.path.exists(app.config['UPLOAD_FOLDER']):
-        os.makedirs(app.config['UPLOAD_FOLDER'])
-    app.run(debug=True)
+    Timer(1, open_browser).start()
+    app.run(debug=False)

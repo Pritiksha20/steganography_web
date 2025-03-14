@@ -7,8 +7,13 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <div class="container">
+    <header>
+        <img class="logo" src="{{url_for('static', filename='assets/logo.png')}}" alt="logo">
         <h1>Steganography</h1>
+    </header>
+
+    <div class="container">
+        <h1>Steganography Tool</h1>
         <form method="POST" enctype="multipart/form-data">
             <label for="choice">Choose an option:</label>
             <select name="choice" id="choice">
@@ -29,7 +34,8 @@
 
         {% if encoded_image %}
             <h2>Encoded Image:</h2>
-            <img src="{{ url_for('static', filename='uploads/encoded_image.png') }}" alt="Encoded Image">
+            <img class="encoded_image" src="{{ url_for('static', filename='uploads/encoded_image.png') }}" alt="Encoded Image">
+            <button class="download_image" onclick="downloadImage()">Download Image</button>
         {% endif %}
 
         {% if decoded_message %}
@@ -38,26 +44,31 @@
         {% endif %}
     </div>
 
+    <footer>
+        <p>&copy; 2025 Steganography Tool</p>
+    </footer>
+
     <script>
         document.getElementById('choice').addEventListener('change', function() {
-            var messageField = document.getElementById('message-field');
-            if (this.value === '1') {
-                messageField.style.display = 'block'; // Show the message input field
-            } else {
-                messageField.style.display = 'none'; // Hide the message input field
-            }
+            document.getElementById('message-field').style.display = 
+                this.value === '1' ? 'block' : 'none';
         });
-    
-        // Trigger the change event on page load to set the initial state
+
         document.addEventListener('DOMContentLoaded', function() {
-            var choice = document.getElementById('choice');
-            var messageField = document.getElementById('message-field');
-            if (choice.value === '1') {
-                messageField.style.display = 'block'; // Show the message input field
-            } else {
-                messageField.style.display = 'none'; // Hide the message input field
-            }
+            const choice = document.getElementById('choice');
+            document.getElementById('message-field').style.display = 
+                choice.value === '1' ? 'block' : 'none';
         });
+
+        function downloadImage() {
+            const image = document.querySelector('.encoded_image');
+            const link = document.createElement('a');
+            link.href = image.src;
+            link.download = 'encoded_image.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
     </script>
 </body>
 </html>
